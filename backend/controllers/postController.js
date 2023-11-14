@@ -56,4 +56,27 @@ const getPost = async (req, res) => {
   }
 }
 
-export { createPost, getPost }
+const deletePost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.postId)
+
+    //see if post exists
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" })
+    }
+    //see if user is authorized to delete post
+    if (post.postedBy.toString() !== req.user._id.toString()) {
+      return res.status(401).json({ message: "Unauthorized" })
+    }
+
+    await Post.findByIdAndDelete(req.params.postId)
+    res.status(200).json({ message: "Post deleted" })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+    console.log("Error in deletePost", error)
+  }
+}
+
+const likeUnlikePost = async (req, res) => {}
+
+export { createPost, getPost, deletePost, likeUnlikePost }
