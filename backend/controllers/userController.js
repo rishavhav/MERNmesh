@@ -45,4 +45,30 @@ const signupUser = async (req, res) => {
   }
 }
 
-export { signupUser }
+const loginUser = async (req, res) => {
+  try {
+    const { username, password } = req.body
+    const user = await User.findOne({ username })
+    const isPasswordCorrect = await bcrypt.compare(password, user?.password || "") //compare the password from the request with the password from the database
+
+    //if password/username is incorrect, return error
+    if (!user || !isPasswordCorrect) {
+      res.status(401).json({ message: "Invalid username or password" })
+      return
+    }
+
+    //create a cookie and send it to the client
+    generateTokenAndSetCookie(user._id, res)
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      username: user.username,
+    })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+    console.log("Error in login user", error)
+  }
+}
+
+export { signupUser, loginUser }
