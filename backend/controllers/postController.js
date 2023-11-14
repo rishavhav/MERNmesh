@@ -77,6 +77,31 @@ const deletePost = async (req, res) => {
   }
 }
 
-const likeUnlikePost = async (req, res) => {}
+const likeUnlikePost = async (req, res) => {
+  try {
+    const { postId } = req.params
+    console.log("hereeeeee")
+    const userId = req.user._id
+    const post = await Post.findById(postId)
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" })
+    }
+
+    const userLikedPost = post.likes.includes(userId)
+    if (userLikedPost) {
+      await post.likes.pull(userId)
+      await post.save()
+      res.status(200).json({ message: "Post unliked" })
+    } else {
+      await post.likes.push(userId)
+      await post.save()
+      res.status(200).json({ message: "Post liked" })
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+    console.log("Error in likeUnlikePost", error)
+  }
+}
 
 export { createPost, getPost, deletePost, likeUnlikePost }
