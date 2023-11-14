@@ -1,9 +1,9 @@
 # Threads
+
 This app is a Threads mock. React@frontend & Expressjs@backend
 
 Installations for frontend:
-npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion react-router-dom react-icons
-
+npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion react-router-dom react-icons @chakra-ui/icons recoil
 
 Installations for backend:
 npm i express jsonwebtoken bcryptjs dotenv mongoose cookie-parser nodemon
