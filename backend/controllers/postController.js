@@ -80,7 +80,6 @@ const deletePost = async (req, res) => {
 const likeUnlikePost = async (req, res) => {
   try {
     const { postId } = req.params
-    console.log("hereeeeee")
     const userId = req.user._id
     const post = await Post.findById(postId)
 
@@ -104,4 +103,41 @@ const likeUnlikePost = async (req, res) => {
   }
 }
 
-export { createPost, getPost, deletePost, likeUnlikePost }
+const replyPost = async (req, res) => {
+  try {
+    const { text } = req.body
+    const { postId } = req.params
+
+    const userId = req.user._id
+    const userProfilePic = req.user.profilePic
+    const userName = req.user.name
+
+    if (!userId || !text || !userName) {
+      return res.status(400).json({ message: "Please enter all fields" })
+    }
+
+    const post = await Post.findById(postId)
+
+    //if post exists
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" })
+    }
+
+    const reply = {
+      userId,
+      text,
+      userProfilePic,
+      userName,
+    }
+
+    await post.replies.push(reply)
+    await post.save()
+
+    res.status(200).json({ message: "Reply Created", reply })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+    console.log("Error in replyPost", error)
+  }
+}
+
+export { replyPost, createPost, getPost, deletePost, likeUnlikePost }
