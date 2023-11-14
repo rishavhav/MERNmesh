@@ -10,6 +10,7 @@ npm i express jsonwebtoken bcryptjs dotenv mongoose cookie-parser nodemon
 
 To Run the project:
 Add '.env' file in backend and below configs:
+
 PORT = 3000
 MONGO_URI= <YourConnectUrl>
 
