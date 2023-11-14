@@ -147,4 +147,19 @@ const updateUser = async (req, res) => {
   }
 }
 
-export { updateUser, signupUser, loginUser, logoutUser, followUnFollowUser }
+const getUserProfile = async (req, res) => {
+  const { username } = req.params
+
+  try {
+    const user = await User.findOne({ username }).select("-password").select("updatedAt") // select everything about user other than the - fields
+
+    if (!user) return res.status(400).json({ error: "User not found" })
+
+    res.status(200).json({ user })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+    console.log("Error in getUserProfile: ", error.message)
+  }
+}
+
+export { getUserProfile, updateUser, signupUser, loginUser, logoutUser, followUnFollowUser }
