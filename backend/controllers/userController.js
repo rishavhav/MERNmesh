@@ -8,7 +8,7 @@ const signupUser = async (req, res) => {
     //if user exists, return error
     const user = await User.findOne({ $or: [{ email }, { username }] })
     if (user) {
-      res.status(400).json({ message: "User already exists" })
+      res.status(400).json({ error: "User already exists" })
       return
     }
 
@@ -37,10 +37,10 @@ const signupUser = async (req, res) => {
         username: newUser.username,
       })
     } else {
-      res.status(400).json({ message: "Invalid user data" })
+      res.status(400).json({ error: "Invalid user data" })
     }
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ error: error.message })
     console.log("Error in signup user", error)
   }
 }
@@ -53,7 +53,7 @@ const loginUser = async (req, res) => {
 
     //if password/username is incorrect, return error
     if (!user || !isPasswordCorrect) {
-      res.status(401).json({ message: "Invalid username or password" })
+      res.status(401).json({ error: "Invalid username or password" })
       return
     }
 
@@ -66,7 +66,7 @@ const loginUser = async (req, res) => {
       username: user.username,
     })
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ error: error.message })
     console.log("Error in login user", error)
   }
 }
@@ -76,7 +76,7 @@ const logoutUser = (req, res) => {
     res.clearCookie("jwt")
     res.status(200).json({ message: "User logged out" })
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ error: error.message })
     console.log("Error in logout user", error)
   }
 }
@@ -142,7 +142,7 @@ const updateUser = async (req, res) => {
       console.log("Error in updateUser: ", err.message)
     }
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ error: error.message })
     console.log("Error in updateUser: ", error.message)
   }
 }
@@ -157,7 +157,7 @@ const getUserProfile = async (req, res) => {
 
     res.status(200).json({ user })
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ error: error.message })
     console.log("Error in getUserProfile: ", error.message)
   }
 }
